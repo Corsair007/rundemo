@@ -1,6 +1,5 @@
 package com.yeahmobi.rundemo.web;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -36,7 +35,6 @@ import com.yeahmobi.rundemo.utils.Constants;
 @Controller
 public class AppController {
 	
-	@SuppressWarnings("unused")
 	private static final Logger LOG = LoggerFactory
 			.getLogger(AppController.class);
 
@@ -58,13 +56,7 @@ public class AppController {
 			map.put("code", code);
 			map.put("success", true);
 		} catch (Exception e) {
-			StringBuilder error = new StringBuilder();
-			error.append(e.getMessage()).append("\n");
-			for (StackTraceElement element : e.getStackTrace()) {
-				error.append(element.toString()).append("\n");
-			}
-			map.put("success", false);
-			map.put("errorMsg", error.toString());
+			operateionAfterException(map, e);
 		}
 		Gson gson = new Gson();
 		return gson.toJson(map);
@@ -83,13 +75,7 @@ public class AppController {
 			map.put("res", res);
 			map.put("success", true);
 		} catch (Exception e) {
-			StringBuilder error = new StringBuilder();
-			error.append(e.getMessage()).append("\n");
-			for (StackTraceElement element : e.getStackTrace()) {
-				error.append(element.toString()).append("\n");
-			}
-			map.put("success", false);
-			map.put("errorMsg", error.toString());
+			operateionAfterException(map, e);
 		}
 		Gson gson = new Gson();
 		return gson.toJson(map);
@@ -108,13 +94,7 @@ public class AppController {
 			map.put("res", res);
 			map.put("success", true);
 		} catch (Exception e) {
-			StringBuilder error = new StringBuilder();
-			error.append(e.getMessage()).append("\n");
-			for (StackTraceElement element : e.getStackTrace()) {
-				error.append(element.toString()).append("\n");
-			}
-			map.put("success", false);
-			map.put("errorMsg", error.toString());
+			operateionAfterException(map, e);
 		}
 		Gson gson = new Gson();
 		return gson.toJson(map);
@@ -123,31 +103,50 @@ public class AppController {
 
 	@RequestMapping(value = "/{app}")
 	public ModelAndView appIndex(@PathVariable String app,
-			HttpServletRequest request, HttpServletResponse response)
-			throws FileNotFoundException, IOException {
+			HttpServletRequest request, HttpServletResponse response){
 		Map<String, Object> map = new HashMap<String, Object>();
 
 		// 打开页面时，生成pageid，生成JavaProject
 		String pageid = UUID.randomUUID().toString();
-		JavaProject javaProject = new JavaProject(app, pageid);
-		ProjectContext.putJavaProject(app, pageid, javaProject);
-
-		AppProject appProject = ProjectContext.getAppProject(app);
-		String[] resFileNameList = javaProject.loadResFileNameList();
-		String pom = appProject.loadPom();
-		
-		String javaFileTreeJsonData = appProject.getFileTreeJsonData().replace("\"", ";").replace("<", "#").replace(">", "|");
-		map.put("pom", pom);
-		// 返回的json数据中含有引号"和<>，前台js解析时会自动转义，这里用其他字符替换，传到前台后再替换回来
-		// filePath路径不能以"\"来分割，否则前台js将JSON字符串转成JSON对象时会报含有非法字符
-		map.put("javaFileInfoList", URLEncoder.encode(javaFileTreeJsonData,"UTF-8"));
-		map.put("resFileNameList", resFileNameList);
-		map.put("app", app);
-		map.put("allAppNames", ProjectContext.getAllAppNames());
-		map.put("pageid", pageid);
-		map.put("gitUrl", appProject.getGitUrl());
-		map.put("packageName", appProject.getPackageName().isEmpty() ? Constants.DEFAULT_PACKAGE : appProject.getPackageName());
+		JavaProject javaProject;
+		try {
+			javaProject = new JavaProject(app, pageid);
+			ProjectContext.putJavaProject(app, pageid, javaProject);
+			
+			AppProject appProject = ProjectContext.getAppProject(app);
+			String[] resFileNameList = javaProject.loadResFileNameList();
+			String pom = appProject.loadPom();
+			
+			String javaFileTreeJsonData = appProject.getFileTreeJsonData().replace("\"", ";").replace("<", "#").replace(">", "|");
+			map.put("pom", pom);
+			// 返回的json数据中含有引号"和<>，前台js解析时会自动转义，这里用其他字符替换，传到前台后再替换回来
+			// filePath路径不能以"\"来分割，否则前台js将JSON字符串转成JSON对象时会报含有非法字符
+			map.put("javaFileInfoList", URLEncoder.encode(javaFileTreeJsonData,"UTF-8"));
+			map.put("resFileNameList", resFileNameList);
+			map.put("app", app);
+			map.put("allAppNames", ProjectContext.getAllAppNames());
+			map.put("pageid", pageid);
+			map.put("gitUrl", appProject.getGitUrl());
+			map.put("packageName", appProject.getPackageName().isEmpty() ? Constants.DEFAULT_PACKAGE : appProject.getPackageName());
+		} catch (IllegalArgumentException e) {
+			map.put("errorMsg", "app project not exsit:" + app);
+			LOG.error(e.getMessage());
+			return new ModelAndView("404", map);
+		} catch (Exception e) {
+			operateionAfterException(map, e);
+		}
 		return new ModelAndView("app", map);
+	}
+
+	private void operateionAfterException(Map<String, Object> map, Exception e) {
+		StringBuilder error = new StringBuilder();
+		error.append(e.getMessage()).append("\n");
+		for (StackTraceElement element : e.getStackTrace()) {
+			error.append(element.toString()).append("\n");
+		}
+		map.put("success", false);
+		map.put("errorMsg", error.toString());
+		LOG.error(error.toString());
 	}
 
 	@RequestMapping(value = "/{app}/compile", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
@@ -173,13 +172,7 @@ public class AppController {
 			map.put("className", className);
 			map.put("success", true);
 		} catch (Exception e) {
-			StringBuilder error = new StringBuilder();
-			error.append(e.getMessage()).append("\n");
-			for (StackTraceElement element : e.getStackTrace()) {
-				error.append(element.toString()).append("\n");
-			}
-			map.put("success", false);
-			map.put("errorMsg", error.toString());
+			operateionAfterException(map, e);
 		}
 		Gson gson = new Gson();
 		return gson.toJson(map);
@@ -207,13 +200,7 @@ public class AppController {
 			javaProject.run(className);
 			map.put("success", true);
 		} catch (Exception e) {
-			StringBuilder error = new StringBuilder();
-			error.append(e.getMessage()).append("\n");
-			for (StackTraceElement element : e.getStackTrace()) {
-				error.append(element.toString()).append("\n");
-			}
-			map.put("success", false);
-			map.put("errorMsg", error.toString());
+			operateionAfterException(map, e);
 		}
 		Gson gson = new Gson();
 		return gson.toJson(map);
@@ -289,13 +276,7 @@ public class AppController {
 			map.put("success", true);
 
 		} catch (Exception e) {
-			StringBuilder error = new StringBuilder();
-			error.append(e.getMessage()).append("\n");
-			for (StackTraceElement element : e.getStackTrace()) {
-				error.append(element.toString()).append("\n");
-			}
-			map.put("success", false);
-			map.put("errorMsg", (error.toString()));
+			operateionAfterException(map, e);
 		}
 		Gson gson = new Gson();
 		return gson.toJson(map);
@@ -320,13 +301,7 @@ public class AppController {
 		} catch (IOException e) {
 			map.put("success", true);
 		} catch (Exception e) {
-			StringBuilder error = new StringBuilder();
-			error.append(e.getMessage()).append("\n");
-			for (StackTraceElement element : e.getStackTrace()) {
-				error.append(element.toString()).append("\n");
-			}
-			map.put("success", false);
-			map.put("errorMsg", error.toString());
+			operateionAfterException(map, e);
 		}
 		Gson gson = new Gson();
 		return gson.toJson(map);
@@ -343,13 +318,7 @@ public class AppController {
 			javaProject.shutdown();
 			map.put("success", true);
 		} catch (Exception e) {
-			StringBuilder error = new StringBuilder();
-			error.append(e.getMessage()).append("\n");
-			for (StackTraceElement element : e.getStackTrace()) {
-				error.append(element.toString()).append("\n");
-			}
-			map.put("success", false);
-			map.put("errorMsg", error.toString());
+			operateionAfterException(map, e);
 		}
 		Gson gson = new Gson();
 		return gson.toJson(map);
@@ -367,13 +336,7 @@ public class AppController {
 			javaProject.close();
 			map.put("success", true);
 		} catch (Exception e) {
-			StringBuilder error = new StringBuilder();
-			error.append(e.getMessage()).append("\n");
-			for (StackTraceElement element : e.getStackTrace()) {
-				error.append(element.toString()).append("\n");
-			}
-			map.put("success", false);
-			map.put("errorMsg", error.toString());
+			operateionAfterException(map, e);
 		}
 		Gson gson = new Gson();
 		return gson.toJson(map);

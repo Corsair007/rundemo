@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+#parse("header.htm")
+<style type="text/css">
+.nav-pills>li>a {
+	border-radius: 5px 5px 5px 5px;
+	margin-bottom: 2px;
+	margin-top: 2px;
+	padding-bottom: 12px;
+	padding-top: 12px;
+	background-color: #CEECF5;
+}
+
+#detailBackgroundColor {
+	background-color: #EFFBF8;
+	font-size: 16px;
+	font-family: sans-serif;
+	line-height: 25px;
+}
+</style>
+<script>
+	//环境变量
+	window.contextpath = "${rc.contextPath}";
+	window.app = "${app}";
+</script>
+</head>
+<body>
+#parse("navbar.htm")
+	<div class="error-container" style="background-color: #EFFBF8; margin: 0 auto; margin-top: 10px; height: auto; width: 70%">
+				<div class="well">
+					<h1 class="grey lighter smaller">
+						<span class="blue bigger-125"> <i class="icon-sitemap"></i>
+							404
+						</span> Page Not Found
+					</h1>
+
+					<hr />
+					<h3 class="lighter smaller">We looked everywhere but we
+						couldn't find it!</h3>
+						<h4 class="smaller">${errorMsg}</h4>
+					<div>
+					<hr/>
+						
+						<div class="space"></div>
+						<h4 class="smaller">Try one of the following:</h4>
+
+						<ul class="list-unstyled spaced inline bigger-110 margin-15">
+							<li><i class="icon-hand-right blue"></i> Re-check the url
+								for typos</li>
+
+							<li><i class="icon-hand-right blue"></i> Read the faq</li>
+
+							<li><i class="icon-hand-right blue"></i> Tell us about it</li>
+						</ul>
+					</div>
+
+					<hr />
+					<div class="space"></div>
+
+					<div class="center">
+						<a href="javascript:history.go(-1)" class="btn btn-grey"> <i class="icon-arrow-left"></i>
+							Go Back
+						</a> 
+						<a href="${rc.contextPath}/" class="btn btn-primary"> 首  页
+						</a>
+					</div>
+				</div>
+			</div>
+	#parse("foot.htm")
+</body>
+</html>
