@@ -43,6 +43,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.google.gson.Gson;
 import com.yeahmobi.rundemo.config.Config;
@@ -65,6 +66,12 @@ public class AdminController {
 		} catch (InterruptedException e) {
 			LOG.info("give shell files permission failed:" + e.getMessage());
 		}
+	}
+	
+	@RequestMapping(value = "/doc")
+	public ModelAndView allApps(HttpServletRequest request,
+			HttpServletResponse response) {
+		return new ModelAndView("doc");
 	}
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, produces = "application/json; charset=utf-8")

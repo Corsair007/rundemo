@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+#parse("header.htm")
+<style type="text/css">
+.nav-pills>li>a {
+	border-radius: 5px 5px 5px 5px;
+	margin-bottom: 2px;
+	margin-top: 2px;
+	padding-bottom: 12px;
+	padding-top: 12px;
+	background-color: #CEECF5;
+}
+
+#detailBackgroundColor {
+	background-color: #EFFBF8;
+	font-size: 16px;
+	font-family: sans-serif;
+	line-height: 25px;
+}
+
+hr {
+	width: : "100%";
+	margin-top: -5px;
+	border: 1px solid #00A1DD;
+}
+</style>
+<script>
+	//环境变量
+	window.contextpath = "${rc.contextPath}";
+	window.app = "${app}";
+</script>
+</head>
+<body>
+	#parse("navbar.htm")
+	<div style="display: none" id="error_Msg">
+		<div class="alert alert-danger">
+			<button type="button" class="close" data-dismiss="alert">×</button>
+			<h4 style="text-align: center;"></h4>
+		</div>
+	</div>
+	<div class="container">
+		<textarea style="display: none" id="input-source">#include("doc.md")</textarea>
+		<div id="viewer"></div>
+	</div>
+
+	#parse("foot.htm")
+
+	<script src="${rc.contextPath}/javascripts/marked.js"></script>
+	<script>
+		var mdSource = document.getElementById('input-source').value;
+		document.getElementById('viewer').innerHTML = marked(mdSource);
+	</script>
+	<script src="${rc.contextPath}/javascripts/marked.js"></script>
+	<script>
+		var mdSource = document.getElementById('input-source').value;
+		document.getElementById('viewer').innerHTML = marked(mdSource);
+	</script>
+</body>
+</html>

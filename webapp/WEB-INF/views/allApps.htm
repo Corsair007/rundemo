@@ -40,14 +40,12 @@
 			<div style="margin: 0 auto; margin-top: -50px; margin-bottom: 20px;">
 				<h1
 					style="height: 200px; width: 600px; background: url('${rc.contextPath}/images/big-logo.png') no-repeat scroll 0 0 transparent;"></h1>
-				<!-- <img alt="" style=""
-               src="${rc.contextPath}/images/big-logo.png"> -->
 			</div>
 			<p>
 				一个可实时运行的demo平台，您可以在查看应用的demo的同时，执行这些demo，看到运行结果。同时可以修改代码，也可以马上看到修改后的效果！
 				<a style="margin-left: 10px; font-size: 16px; color: #006DCC;"
-					alt="点击查看详细介绍" href="#" onclick="showDetail();" id="detailLink">更多 >></a>
-			</p>
+					alt="点击查看详细介绍" href="${rc.contextPath}/doc" target="_blank"  id="detailLink">详细 >></a>
+			</p><!-- onclick="showDetail();"  -->
 			<div style="display: none;" id="detailMsg">
 				<div class="alert" id="detailBackgroundColor">
 					#parse("docdesc.htm")
