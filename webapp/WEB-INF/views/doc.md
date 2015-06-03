@@ -29,7 +29,7 @@ rundemo是一个基于`GitHub`和`Maven`的在线demo演示平台，您可将自
 
 * * *
 * **测试环境**  
-	<http://localhost:8080/rundemo/>    
+	<http://localhost:9090/rundemo/>    
 	用户进入系统后，首页会展示系统现有的所有应用：
 ![](images/docImgs/home.jpg)
 
@@ -43,7 +43,7 @@ rundemo是一个基于`GitHub`和`Maven`的在线demo演示平台，您可将自
 * “分支”：想查看的demo所在分支，默认为master分支；
 * “pom文件所在目录”：根据demo的实际目录结构，填写pom文件所在的相对路径，如果pom文件在项目的根目录下则可不填；
 * “显示的package”：只显示你想查看或显示的包下的代码文件，可填写该项为`com/yeahmobi/rundemo/XXXexample`，默认显示`src/mian/java`包下的所有子包和代码文件;
-* “maven命令参数”：系统后台会根据pom文件使用mvn命令来生成classpath，在可以加一些控制参数;   
+* “maven命令参数”：系统后台会根据pom文件使用mvn命令来生成classpath，也可以在这里加一些控制参数，如-DdownloadSources等;   
  
 **2. 点击【创建】后，后台需要一些处理时间，会弹出等待提示框：**   
 ![](images/docImgs/createwait.jpg)
